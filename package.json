@@ -1,0 +1,27 @@
+{
+  "name": "authentication-flows-js-inmem",
+  "version": "1.0.0",
+  "description": "in mem implementation for authentication-flows-js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OhadR/authentication-flows-js-inmem.git"
+  },
+  "keywords": [
+    "authentication-flows",
+    "in-memory",
+    "repository"
+  ],
+  "author": "Ohad Redlich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OhadR/authentication-flows-js-inmem/issues"
+  },
+  "homepage": "https://github.com/OhadR/authentication-flows-js-inmem#readme",
+  "dependencies": {
+    "authentication-flows-js": "0.0.48"
+  }
+}
