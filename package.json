@@ -2,8 +2,9 @@
   "name": "authentication-flows-js-inmem",
   "version": "1.0.1",
   "description": "in mem implementation for authentication-flows-js",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
+    "compile": "npx tsc --sourcemap --declaration",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
