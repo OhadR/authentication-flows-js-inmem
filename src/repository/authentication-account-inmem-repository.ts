@@ -12,12 +12,31 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         return this.users.get(username);
     }
 
-    setEnabled(email: string) {
-        throw new Error("Method not implemented.");
+    setEnabled(username: string) {
+        this.setEnabledFlag(username, true);
     }
 
-    setDisabled(email: string) {
-        throw new Error("Method not implemented.");
+    setDisabled(username: string) {
+        this.setEnabledFlag(username, false);
+    }
+
+    protected setEnabledFlag(username: string, flag: boolean)
+    {
+        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+        const newUser: AuthenticationUser = new AuthenticationUserImpl(
+            username,
+            storedUser.getPassword(),
+            flag,
+            storedUser.getLoginAttemptsLeft(),
+            storedUser.getPasswordLastChangeDate(),
+            storedUser.getFirstName(),
+            storedUser.getLastName(),
+            storedUser.getAuthorities()
+        );
+
+        //delete old user and set a new one, since iface does not support "setPassword()":
+        this.deleteUser(username);
+        this.users.set(username, newUser);
     }
 
     isActivated(email: string): boolean {
@@ -28,12 +47,30 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         throw new Error("Method not implemented.");
     }
 
-    decrementAttemptsLeft(email: string) {
-        throw new Error("Method not implemented.");
+    decrementAttemptsLeft(username: string) {
+        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+        let attempts = storedUser.getLoginAttemptsLeft();
+        this.setAttemptsLeft(username, --attempts);
     }
 
-    setAttemptsLeft(email: string, numAttemptsAllowed: number) {
-        throw new Error("Method not implemented.");
+    setAttemptsLeft(username: string, numAttemptsAllowed: number) {
+        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+
+        const newUser: AuthenticationUser = new AuthenticationUserImpl(
+            username,
+            storedUser.getPassword(),
+            storedUser.isEnabled(),
+            numAttemptsAllowed,
+            storedUser.getPasswordLastChangeDate(),
+            storedUser.getFirstName(),
+            storedUser.getLastName(),
+            storedUser.getAuthorities()
+        );
+
+        //delete old user and set a new one, since iface does not support "setPassword()":
+        this.deleteUser(username);
+        this.users.set(username, newUser);
+
     }
 
     setPassword(email: string, newPassword: string) {
@@ -73,8 +110,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         this.users.set(newUser.getUsername(), newUser);
     }
 
-    deleteUser(email: string): void {
-        throw new Error("Method not implemented.");
+    deleteUser(username: string): void {
+        this.users.delete(username);
     }
 
     userExists(username: string): boolean {
