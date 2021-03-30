@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/OhadR/authentication-flows-js-inmem#readme",
   "dependencies": {
-    "authentication-flows-js": "0.0.52"
+    "authentication-flows-js": "0.0.55"
   }
 }

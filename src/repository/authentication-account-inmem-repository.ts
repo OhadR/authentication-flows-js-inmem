@@ -8,8 +8,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
 {
     private users = new Map<String, AuthenticationUser>();
 
-    loadUserByUsername(email: string): AuthenticationUser {
-        throw new Error("Method not implemented.");
+    loadUserByUsername(username: string): AuthenticationUser {
+        return this.users.get(username);
     }
 
     setEnabled(email: string) {
@@ -52,7 +52,7 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         throw new Error("Method not implemented.");
     }
 
-    createUser(authenticationUser: AuthenticationUser): AccountState {
+    createUser(authenticationUser: AuthenticationUser): void {
         debug('createUser / inmem implementation!');
 
         const newUser: AuthenticationUser = new AuthenticationUserImpl(authenticationUser.getUsername(),
@@ -67,12 +67,10 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         if( this.userExists( newUser.getUsername() ) )
         {
             //ALREADY_EXIST:
-            throw new Error("user already exists");
+            throw new Error(`user ${newUser.getUsername()} already exists`);
         }
 
         this.users.set(newUser.getUsername(), newUser);
-
-        return null;
     }
 
     deleteUser(email: string): void {
