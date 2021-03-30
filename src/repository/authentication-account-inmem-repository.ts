@@ -111,10 +111,12 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
     }
 
     deleteUser(username: string): void {
+        debug('deleteUser');
         this.users.delete(username);
     }
 
     userExists(username: string): boolean {
+        debug('userExists?');
         return this.users.has(username);
     }
 }
