@@ -1,10 +1,13 @@
 import { AuthenticationAccountRepository,
 	AuthenticationUser,
-	AccountState } from 'authentication-flows-js';
+	AccountState,
+    AuthenticationUserImpl } from 'authentication-flows-js';
 const debug = require('debug')('authentication-account-inmem-repository');
 
 export class AuthenticationAccountInmemRepository implements AuthenticationAccountRepository
 {
+    private users = new Map<String, AuthenticationUser>();
+
     loadUserByUsername(email: string): AuthenticationUser {
         throw new Error("Method not implemented.");
     }
@@ -50,8 +53,25 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
     }
 
     createUser(authenticationUser: AuthenticationUser): AccountState {
-        //TODO do someting
-        debug('this is inmem implementation!');
+        debug('createUser / inmem implementation!');
+
+        const newUser: AuthenticationUser = new AuthenticationUserImpl(authenticationUser.getUsername(),
+            authenticationUser.getPassword(),
+            false,
+            authenticationUser.getLoginAttemptsLeft(),
+            new Date(),
+            authenticationUser.getFirstName(),
+            authenticationUser.getLastName(),
+            authenticationUser.getAuthorities());
+
+        if( this.userExists( newUser.getUsername() ) )
+        {
+            //ALREADY_EXIST:
+            throw new Error("user already exists");
+        }
+
+        this.users.set(newUser.getUsername(), newUser);
+
         return null;
     }
 
@@ -59,5 +79,7 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         throw new Error("Method not implemented.");
     }
 
-
+    userExists(username: string): boolean {
+        return this.users.has(username);
+    }
 }
