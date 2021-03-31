@@ -2,21 +2,26 @@ import { LinksRepository } from "authentication-flows-js";
 
 export class LinksInmemRepository implements LinksRepository
 {
-    private links = new Set<string>();
+    private links = new Map<string, string>();
 
-    addLink(link: string) {
-        this.links.add(link);
+    addLink(username: string, link: string) {
+        this.links.set(username, link);
     }
 
     /**
      * remove link. return true if link was found and removed. false otherwise.
      * @param link
      */
-    removeLink(link: string): boolean {
-        if(!this.links.has(link))
+    removeLink(username: string): boolean {
+        if(!this.links.has(username))
             return false;
 
-        this.links.delete(link);
+        this.links.delete(username);
         return true;
+    }
+
+    //this is for the automation only:
+    getLink(username: string): string {
+        return this.links.get(username);
     }
 }
