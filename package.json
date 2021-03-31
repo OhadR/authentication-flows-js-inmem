@@ -1,7 +1,7 @@
 {
   "name": "authentication-flows-js-inmem",
   "version": "1.0.6",
-  "description": "in mem implementation for authentication-flows-js",
+  "description": "in-mem implementation for authentication-flows-js",
   "main": "dist/index.js",
   "scripts": {
     "compile": "npx tsc --sourcemap --declaration",
@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/OhadR/authentication-flows-js-inmem#readme",
   "dependencies": {
-    "authentication-flows-js": "0.0.55"
+    "authentication-flows-js": "0.0.58"
   }
 }

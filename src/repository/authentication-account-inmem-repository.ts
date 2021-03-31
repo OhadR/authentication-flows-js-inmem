@@ -6,7 +6,7 @@ const debug = require('debug')('authentication-account-inmem-repository');
 
 export class AuthenticationAccountInmemRepository implements AuthenticationAccountRepository
 {
-    private users = new Map<String, AuthenticationUser>();
+    private users = new Map<string, AuthenticationUser>();
 
     loadUserByUsername(username: string): AuthenticationUser {
         return this.users.get(username);
