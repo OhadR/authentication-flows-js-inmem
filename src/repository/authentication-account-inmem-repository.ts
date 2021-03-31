@@ -77,8 +77,12 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         throw new Error("Method not implemented.");
     }
 
+    //TODO: should be in abstract class
     getEncodedPassword(username: string): string {
-        throw new Error("Method not implemented.");
+        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+        if (!storedUser)
+            return null;
+        return storedUser.getPassword();
     }
 
     getPasswordLastChangeDate(email: string): Date {
