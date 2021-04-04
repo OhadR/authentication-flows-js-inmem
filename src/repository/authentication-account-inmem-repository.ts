@@ -1,6 +1,5 @@
 import { AuthenticationAccountRepository,
 	AuthenticationUser,
-	AccountState,
     AuthenticationUserImpl } from 'authentication-flows-js';
 const debug = require('debug')('authentication-account-inmem-repository');
 
@@ -40,10 +39,6 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
     }
 
     isActivated(email: string): boolean {
-        throw new Error("Method not implemented.");
-    }
-
-    isAccountLocked(email: string): AccountState {
         throw new Error("Method not implemented.");
     }
 
@@ -117,7 +112,6 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
     }
 
     deleteUser(username: string): void {
-        debug('deleteUser');
         this.users.delete(username);
     }
 
