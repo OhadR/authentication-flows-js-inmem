@@ -47,10 +47,12 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         throw new Error("Method not implemented.");
     }
 
-    decrementAttemptsLeft(username: string) {
-        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+    //TODO: should be in abstract class
+    async decrementAttemptsLeft(username: string) {
+        const storedUser: AuthenticationUser =  await this.loadUserByUsername(username);
         let attempts = storedUser.getLoginAttemptsLeft();
-        this.setAttemptsLeft(username, --attempts);
+        debug(`current num attempts: ${attempts}`);
+        await this.setAttemptsLeft(username, --attempts);
     }
 
     setAttemptsLeft(username: string, numAttemptsAllowed: number) {
@@ -77,7 +79,7 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         throw new Error("Method not implemented.");
     }
 
-    //TODO: should be in abstract class
+    //TODO: should be in abstract class, async/await
     getEncodedPassword(username: string): string {
         const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
         if (!storedUser)
