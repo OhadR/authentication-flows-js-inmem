@@ -30,7 +30,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             storedUser.getPasswordLastChangeDate(),
             storedUser.getFirstName(),
             storedUser.getLastName(),
-            storedUser.getAuthorities()
+            storedUser.getAuthorities(),
+            storedUser.getLink()
         );
 
         //delete old user and set a new one, since iface does not support "setPassword()":
@@ -61,13 +62,13 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             storedUser.getPasswordLastChangeDate(),
             storedUser.getFirstName(),
             storedUser.getLastName(),
-            storedUser.getAuthorities()
+            storedUser.getAuthorities(),
+            storedUser.getLink()
         );
 
         //delete old user and set a new one, since iface does not support "setPassword()":
         this.deleteUser(username);
         this.users.set(username, newUser);
-
     }
 
     setPassword(email: string, newPassword: string) {
@@ -100,7 +101,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             new Date(),
             authenticationUser.getFirstName(),
             authenticationUser.getLastName(),
-            authenticationUser.getAuthorities());
+            authenticationUser.getAuthorities(),
+            authenticationUser.getLink());
 
         if( this.userExists( newUser.getUsername() ) )
         {
@@ -118,5 +120,59 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
     userExists(username: string): boolean {
         debug('userExists?');
         return this.users.has(username);
+    }
+
+    addLink(username: string, link: string) {
+        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+
+        const newUser: AuthenticationUser = new AuthenticationUserImpl(
+            username,
+            storedUser.getPassword(),
+            storedUser.isEnabled(),
+            storedUser.getLoginAttemptsLeft(),
+            storedUser.getPasswordLastChangeDate(),
+            storedUser.getFirstName(),
+            storedUser.getLastName(),
+            storedUser.getAuthorities(),
+            link
+        );
+
+        //delete old user and set a new one, since iface does not support "setPassword()":
+        this.deleteUser(username);
+        this.users.set(username, newUser);
+    }
+
+    /**
+     * remove link
+     * @param link
+     */
+    removeLink(username: string): boolean {
+        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+
+        if(!storedUser.getLink())
+            return false;
+
+        const newUser: AuthenticationUser = new AuthenticationUserImpl(
+            username,
+            storedUser.getPassword(),
+            storedUser.isEnabled(),
+            storedUser.getLoginAttemptsLeft(),
+            storedUser.getPasswordLastChangeDate(),
+            storedUser.getFirstName(),
+            storedUser.getLastName(),
+            storedUser.getAuthorities(),
+            null
+        );
+
+        //delete old user and set a new one, since iface does not support "setPassword()":
+        this.deleteUser(username);
+        this.users.set(username, newUser);
+        return true;
+    }
+
+    //this is for the automation only:
+    getLink(username: string): string {
+        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+        return storedUser.getLink();
     }
 }
