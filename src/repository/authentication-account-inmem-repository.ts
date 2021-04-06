@@ -39,8 +39,11 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         this.users.set(username, newUser);
     }
 
-    isActivated(email: string): boolean {
-        throw new Error("Method not implemented.");
+    isEnabled(username: string): boolean {
+        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+        if (!storedUser)
+            return false;
+        return storedUser.isEnabled();
     }
 
     //TODO: should be in abstract class
