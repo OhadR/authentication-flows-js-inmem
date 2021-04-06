@@ -88,8 +88,9 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         return storedUser.getPassword();
     }
 
-    getPasswordLastChangeDate(email: string): Date {
-        throw new Error("Method not implemented.");
+    getPasswordLastChangeDate(username: string): Date {
+        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+        return storedUser.getPasswordLastChangeDate();
     }
 
     setAuthority(username: string, authority: string) {
