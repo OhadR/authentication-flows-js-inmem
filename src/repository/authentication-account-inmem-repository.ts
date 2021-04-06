@@ -31,7 +31,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             storedUser.getFirstName(),
             storedUser.getLastName(),
             storedUser.getAuthorities(),
-            storedUser.getLink()
+            storedUser.getLink(),
+            storedUser.getLinkDate()
         );
 
         //delete old user and set a new one, since iface does not support "setPassword()":
@@ -66,7 +67,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             storedUser.getFirstName(),
             storedUser.getLastName(),
             storedUser.getAuthorities(),
-            storedUser.getLink()
+            storedUser.getLink(),
+            storedUser.getLinkDate()
         );
 
         //delete old user and set a new one, since iface does not support "setPassword()":
@@ -105,7 +107,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             authenticationUser.getFirstName(),
             authenticationUser.getLastName(),
             authenticationUser.getAuthorities(),
-            authenticationUser.getLink());
+            authenticationUser.getLink(),
+            authenticationUser.getLinkDate());
 
         if( this.userExists( newUser.getUsername() ) )
         {
@@ -137,7 +140,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             storedUser.getFirstName(),
             storedUser.getLastName(),
             storedUser.getAuthorities(),
-            link
+            link,
+            new Date()
         );
 
         //delete old user and set a new one, since iface does not support "setPassword()":
@@ -174,8 +178,11 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
     }
 
     //this is for the automation only:
-    getLink(username: string): string {
+    getLink(username: string): { link: string; date: Date; } {
         const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
-        return storedUser.getLink();
+        return {
+            link: storedUser.getLink(),
+            date: storedUser.getLinkDate()
+        };
     }
 }
