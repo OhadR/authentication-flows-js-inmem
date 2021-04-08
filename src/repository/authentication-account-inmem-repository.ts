@@ -76,8 +76,24 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         this.users.set(username, newUser);
     }
 
-    setPassword(email: string, newPassword: string) {
-        throw new Error("Method not implemented.");
+    setPassword(username: string, newPassword: string) {
+        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+
+        const newUser: AuthenticationUser = new AuthenticationUserImpl(
+            username,
+            newPassword,
+            storedUser.isEnabled(),
+            storedUser.getLoginAttemptsLeft(),
+            storedUser.getPasswordLastChangeDate(),
+            storedUser.getFirstName(),
+            storedUser.getLastName(),
+            storedUser.getAuthorities(),
+            null, null          //when resetting the password, delete the links so they become invalid.
+        );
+
+        //delete old user and set a new one, since iface does not support "setPassword()":
+        this.deleteUser(username);
+        this.users.set(username, newUser);
     }
 
     //TODO: should be in abstract class, async/await
