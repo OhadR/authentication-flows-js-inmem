@@ -202,4 +202,16 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             date: storedUser.getLinkDate()
         };
     }
+
+    /**
+     * in real DB we will index also the link. In-mem impl just iterates over all entries.
+     * @param link
+     */
+    getUsernameByLink(link: string): string {
+        for (let user of this.users.values()) {
+            if(user.getLink() === link)
+                return user.getUsername();
+        }
+        throw new Error("Could not find any user with this link.");
+    }
 }
