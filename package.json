@@ -1,6 +1,6 @@
 {
   "name": "authentication-flows-js-inmem",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "in-mem implementation for authentication-flows-js",
   "main": "dist/index.js",
   "scripts": {
