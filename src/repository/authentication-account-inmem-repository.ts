@@ -209,6 +209,7 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
      */
     getUsernameByLink(link: string): string {
         for (let user of this.users.values()) {
+            debug(`########### ${user.getLink()} vs ${link}`);
             if(user.getLink() === link)
                 return user.getUsername();
         }
