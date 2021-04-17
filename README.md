@@ -1,3 +1,6 @@
 # authentication-flows-js-inmem
 
-This project is a **in-memory implementation** for [authentication-flows-js](https://github.com/OhadR/authentication-flows-js).
+[![npm Package](https://img.shields.io/npm/v/authentication-flows-js-inmem.svg?style=flat-square)](https://www.npmjs.org/package/authentication-flows-js-inmem)
+
+This project is a **in-memory implementation** for `AuthenticationAccountRepository` of 
+[authentication-flows-js](https://github.com/OhadR/authentication-flows-js).
