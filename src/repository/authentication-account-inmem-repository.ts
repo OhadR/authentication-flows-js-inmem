@@ -3,8 +3,8 @@ import { AuthenticationAccountRepository,
     AuthenticationUserImpl } from 'authentication-flows-js';
 const debug = require('debug')('authentication-account-inmem-repository');
 
-export class AuthenticationAccountInmemRepository implements AuthenticationAccountRepository
-{
+export class AuthenticationAccountInmemRepository implements AuthenticationAccountRepository {
+
     private users = new Map<string, AuthenticationUser>();
 
     loadUserByUsername(username: string): AuthenticationUser {
@@ -19,8 +19,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         this.setEnabledFlag(username, false);
     }
 
-    protected setEnabledFlag(username: string, flag: boolean)
-    {
+    protected setEnabledFlag(username: string, flag: boolean) {
+
         const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
         const newUser: AuthenticationUser = new AuthenticationUserImpl(
             username,
