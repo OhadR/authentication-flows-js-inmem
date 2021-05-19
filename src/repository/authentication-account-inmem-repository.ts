@@ -112,7 +112,7 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         throw new Error("Method not implemented.");
     }
 
-    createUser(authenticationUser: AuthenticationUser): void {
+    async createUser(authenticationUser: AuthenticationUser): Promise<void> {
         debug('createUser / inmem implementation!');
 
         const newUser: AuthenticationUser = new AuthenticationUserImpl(authenticationUser.getUsername(),
@@ -126,7 +126,7 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             authenticationUser.getToken(),
             authenticationUser.getTokenDate());
 
-        if( this.userExists( newUser.getUsername() ) )
+        if( await this.userExists( newUser.getUsername() ) )
         {
             //ALREADY_EXIST:
             throw new Error(`user ${newUser.getUsername()} already exists`);
@@ -139,7 +139,7 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         this.users.delete(username);
     }
 
-    userExists(username: string): Promise<boolean> {
+    async userExists(username: string): Promise<boolean> {
         debug('userExists?');
         return Promise.resolve( this.users.has(username) );
     }
