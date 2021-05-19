@@ -7,8 +7,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
 
     private users = new Map<string, AuthenticationUser>();
 
-    loadUserByUsername(username: string): AuthenticationUser {
-        return this.users.get(username);
+    loadUserByUsername(username: string): Promise<AuthenticationUser> {
+        return Promise.resolve( this.users.get(username) );
     }
 
     setEnabled(username: string) {
@@ -19,9 +19,9 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         this.setEnabledFlag(username, false);
     }
 
-    protected setEnabledFlag(username: string, flag: boolean) {
+    protected async setEnabledFlag(username: string, flag: boolean) {
 
-        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+        const storedUser: AuthenticationUser =  await this.loadUserByUsername(username);
         const newUser: AuthenticationUser = new AuthenticationUserImpl(
             username,
             storedUser.getPassword(),
@@ -31,8 +31,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             storedUser.getFirstName(),
             storedUser.getLastName(),
             storedUser.getAuthorities(),
-            storedUser.getLink(),
-            storedUser.getLinkDate()
+            storedUser.getToken(),
+            storedUser.getTokenDate()
         );
 
         //delete old user and set a new one, since iface does not support "setPassword()":
@@ -40,11 +40,11 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         this.users.set(username, newUser);
     }
 
-    isEnabled(username: string): boolean {
-        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+    async isEnabled(username: string): Promise<boolean> {
+        const storedUser: AuthenticationUser =  await this.loadUserByUsername(username);
         if (!storedUser)
             return false;
-        return storedUser.isEnabled();
+        return Promise.resolve( storedUser.isEnabled() );
     }
 
     //TODO: should be in abstract class
@@ -55,8 +55,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         await this.setAttemptsLeft(username, --attempts);
     }
 
-    setAttemptsLeft(username: string, numAttemptsAllowed: number) {
-        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+    async setAttemptsLeft(username: string, numAttemptsAllowed: number) {
+        const storedUser: AuthenticationUser =  await this.loadUserByUsername(username);
 
         const newUser: AuthenticationUser = new AuthenticationUserImpl(
             username,
@@ -67,8 +67,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             storedUser.getFirstName(),
             storedUser.getLastName(),
             storedUser.getAuthorities(),
-            storedUser.getLink(),
-            storedUser.getLinkDate()
+            storedUser.getToken(),
+            storedUser.getTokenDate()
         );
 
         //delete old user and set a new one, since iface does not support "setPassword()":
@@ -76,8 +76,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         this.users.set(username, newUser);
     }
 
-    setPassword(username: string, newPassword: string) {
-        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+    async setPassword(username: string, newPassword: string) {
+        const storedUser: AuthenticationUser =  await this.loadUserByUsername(username);
 
         const newUser: AuthenticationUser = new AuthenticationUserImpl(
             username,
@@ -96,17 +96,16 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         this.users.set(username, newUser);
     }
 
-    //TODO: should be in abstract class, async/await
-    getEncodedPassword(username: string): string {
-        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+    async getEncodedPassword(username: string): Promise<string> {
+        const storedUser: AuthenticationUser =  await this.loadUserByUsername(username);
         if (!storedUser)
             return null;
-        return storedUser.getPassword();
+        return Promise.resolve( storedUser.getPassword() );
     }
 
-    getPasswordLastChangeDate(username: string): Date {
-        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
-        return storedUser.getPasswordLastChangeDate();
+    async getPasswordLastChangeDate(username: string): Promise<Date> {
+        const storedUser: AuthenticationUser =  await this.loadUserByUsername(username);
+        return Promise.resolve( storedUser.getPasswordLastChangeDate() );
     }
 
     setAuthority(username: string, authority: string) {
@@ -124,8 +123,8 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
             authenticationUser.getFirstName(),
             authenticationUser.getLastName(),
             authenticationUser.getAuthorities(),
-            authenticationUser.getLink(),
-            authenticationUser.getLinkDate());
+            authenticationUser.getToken(),
+            authenticationUser.getTokenDate());
 
         if( this.userExists( newUser.getUsername() ) )
         {
@@ -140,13 +139,13 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         this.users.delete(username);
     }
 
-    userExists(username: string): boolean {
+    userExists(username: string): Promise<boolean> {
         debug('userExists?');
-        return this.users.has(username);
+        return Promise.resolve( this.users.has(username) );
     }
 
-    addLink(username: string, link: string) {
-        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+    async addLink(username: string, link: string) {
+        const storedUser: AuthenticationUser =  await this.loadUserByUsername(username);
 
         const newUser: AuthenticationUser = new AuthenticationUserImpl(
             username,
@@ -170,11 +169,11 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
      * remove link
      * @param link
      */
-    removeLink(username: string): boolean {
-        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
+    async removeLink(username: string): Promise<boolean> {
+        const storedUser: AuthenticationUser =  await this.loadUserByUsername(username);
 
-        if(!storedUser.getLink())
-            return false;
+        if(!storedUser.getToken())
+            return Promise.resolve( false );
 
         const newUser: AuthenticationUser = new AuthenticationUserImpl(
             username,
@@ -191,27 +190,27 @@ export class AuthenticationAccountInmemRepository implements AuthenticationAccou
         //delete old user and set a new one, since iface does not support "setPassword()":
         this.deleteUser(username);
         this.users.set(username, newUser);
-        return true;
+        return Promise.resolve( true );
     }
 
     //this is for the automation only:
-    getLink(username: string): { link: string; date: Date; } {
-        const storedUser: AuthenticationUser =  this.loadUserByUsername(username);
-        return {
-            link: storedUser.getLink(),
-            date: storedUser.getLinkDate()
-        };
+    async getLink(username: string): Promise<{ link: string; date: Date; }> {
+        const storedUser: AuthenticationUser =  await this.loadUserByUsername(username);
+        return Promise.resolve( {
+            link: storedUser.getToken(),
+            date: storedUser.getTokenDate()
+        } );
     }
 
     /**
      * in real DB we will index also the link. In-mem impl just iterates over all entries.
      * @param link
      */
-    getUsernameByLink(link: string): string {
+    getUsernameByLink(link: string): Promise<string> {
         for (let user of this.users.values()) {
-            debug(`########### ${user.getLink()} vs ${link}`);
-            if(user.getLink() === link)
-                return user.getUsername();
+            debug(`########### ${user.getToken()} vs ${link}`);
+            if(user.getToken() === link)
+                return Promise.resolve( user.getUsername() );
         }
         throw new Error("Could not find any user with this link.");
     }
